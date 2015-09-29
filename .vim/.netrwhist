@@ -1,0 +1,11 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =9
+let g:netrw_dirhist_1='/'
+let g:netrw_dirhist_2='/Users/jacob/projects/soda/plus_dashboard'
+let g:netrw_dirhist_3='/Users/jacob/projects/soda/plus_dashboard/templates'
+let g:netrw_dirhist_4='/Users/jacob/projects/soda/plus_dashboard'
+let g:netrw_dirhist_5='/Users/jacob/projects/soda/plus_dashboard/templates'
+let g:netrw_dirhist_6='/Users/jacob/projects/soda/plus_dashboard/templates/plus_dashboard'
+let g:netrw_dirhist_7='/Users/jacob/personal/react/react-start'
+let g:netrw_dirhist_8='/Users/jacob/.ssh'
+let g:netrw_dirhist_9='/usr/bin'
