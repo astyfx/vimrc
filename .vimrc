@@ -13,11 +13,15 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
+Plugin 'Shougo/neocomplete'
+
 " NERDtree, a filesystem explorer
 Plugin 'scrooloose/nerdtree'
 
 " Fugitive allows use git in vim
 Plugin 'tpope/vim-fugitive'
+
+Plugin 'unterzicht/vim-virtualenv'
 
 " html5, HTML5 + inline SVG omnicomplete funtion, indent and syntax for Vim
 Plugin 'othree/html5.vim'
@@ -33,25 +37,10 @@ Plugin 'scrooloose/syntastic'
 " pairs : parentheses, brackets, quotes, XML tags, and more
 Plugin 'tpope/vim-surround'
 
-" Python-mode contains all you need to develop python applications in Vim.
-Plugin 'klen/python-mode'
-
-" Jedi-vim, a VIM binding to the autocompletion library Jedi.
-" have to install jedi : pip install jedi
-Plugin 'davidhalter/jedi-vim'
-
-"vim-virtualenv
-Plugin 'jmcantrell/vim-virtualenv'
-
 " vim-indent-guides, a plugin for visually displaying indent levels in Vim.
 Plugin 'nathanaelkane/vim-indent-guides'
 
-" YouCompleteMe is a fast, as-you-type, fuzzy-search code completion engine
-" for Vim.
-Plugin 'Valloric/YouCompleteMe'
-
-" Supertab for completion
-Plugin 'ervandew/supertab'
+Plugin 'klen/python-mode'
 
 " Vim-go
 Plugin 'fatih/vim-go'
@@ -93,7 +82,6 @@ set shiftwidth=2 " size of an 'indent'
 set tabstop=2 " size of a hard tabstop, still it is \t
 set softtabstop=2 " sets the number of columns for a TAB
 
-set colorcolumn=80
 set guifont=Hack
 
 "set autoindent
@@ -130,6 +118,10 @@ map <C-n> :NERDTreeToggle<CR>
 "" auto close vim if the only window left open is a NERD Tree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 "
+autocmd FileType python set colorcolumn=120
+
+" for git Commit Message
+autocmd Filetype gitcommit setlocal spell textwidth=72
 
 let g:indent_guides_enable_on_vim_startup = 0
 let g:indent_guides_start_level=2
@@ -140,60 +132,42 @@ let g:explSplitRight=1
 let g:explStartRight=1
 let g:explWinSize=20
 
-" for syntastic
-" no js doc error : 아래 줄이 되어야 하는데 안돼서 그 밑의 인자로 함
-" let g:syntastic_javascript_gjslint_conf=" --nojsdoc"
-let g:syntastic_javascript_gjslint_conf = " --disable 0220"
-let g:syntastic_check_on_open = 1
-let g:syntastic_javascript_checkers = ['gjslint']
-let g:syntastic_python_checkers = []
+let g:syntastic_python_checkers = [] " for pymode lint ignore
 
-" for python-mode
-let g:pymode_lint = 1
-let g:pymode_lint_on_write = 1
-let g:pymode_lint_ignore = "E111,E114,E115,E128,E501,W"
-let g:pymode_rope_completion = 0
-let g:pymode_lint_cwindow = 0
-let g:pymode_options_colorcolumn = 0
+" Settings for python-mode
 
-" python-mode
-" from https://github.com/davidhalter/jedi-vim/issues/196#issuecomment-25234295
-let g:pymode_virtualenv=1 " Auto fix vim python paths if virtualenv enabled
-let g:pymode_folding=0  " Disable python folding
-let g:pymode_utils_whitespaces=0  " Do not autoremove unused whitespaces
-map <Leader>rgd :call RopeGotoDefinition()<CR>
-map <Leader>pl :PyLint<CR>
-let ropevim_enable_shortcuts=1
-let g:pymode_rope_goto_def_newwin="vnew"
-let g:pymode_rope_extended_complete=1
-let g:pymode_syntax=1
-let g:pymode_syntax_builtin_objs=1
-let g:pymode_syntax_builtin_funcs=1
-let g:pymode_lint_minheight = 5   " Minimal height of pylint error window
-let g:pymode_lint_maxheight = 15  " Maximal height of pylint error window
-let g:pymode_lint_write = 0  " Disable pylint checking every save
-let g:pymode_run_key = "<Leader>run"  " default key conflicts with jedi-vim
-let g:pymode_lint_mccabe_complexity = 10
+let g:pymode_virtualenv=1 
+let g:pymode_folding=0                                
+let g:pymode_utils_whitespaces=0                                
+let g:pymode_syntax=0                                           
+let g:pymode_lint=1
+let g:pymode_lint_ignore="E111,E501,W"
 let g:pymode_lint_checker="pyflakes,pep8,pep257,mccabe"
-let g:pymode_syntax_highlight_self=1  " do not highlight self
-let g:pymode_rope_vim_completion=0  " use jedi-vim for completion
-let g:pymode_rope_guess_project=0
-let g:pymode_doc_key="<leader>k"  " used jedi-vim for help
+let g:pymode_lint_minheight=5       
+let g:pymode_lint_maxheight=15
+let g:pymode_lint_write=0
+let g:pymode_lint_mccabe_complexity=10
+let g:pymode_syntax_highlight_self=0
+let g:pymode_doc=0
+let g:pymode_rope=0
+let g:pymode_rope_vim_completion=0
 
-" for debug
-let g:ycm_server_keep_logfiles = 1
-let g:ycm_server_log_level = 'debug'
-let g:ycm_autoclose_preview_window_after_completion=1
+let g:pymode_run=1
+let g:pymode_python="python"
+let g:pymode_run_bind ='<F5>'
 
-" for avoid conflict between YouCompleteMe and python-mode
-let g:ycm_filetype_blacklist = {
-  \ 'python': 1
-\}
+
+" Settings for jedi-vim
+
+let g:jedi#usages_command="<leader>z"
+let g:jedi#show_call_signatures=0
+let g:jedi#popup_on_dot=1
+let g:jedi#popup_select_first=0
+"map <Leader>b Oimport ipdb; ipdb.set_trace() # BREAKPOINT<C-c>
 
 let g:NERDTreeUpdateOnWrite = 0
 
 set statusline=%<%F%h%m%r%h%w%y\ %{strftime(\"%Y/%m/%d-%H:%M:%S\")}%=\ (%l,%v)\ ASCII:%b\ %P
-
 
 " comment setting
 " custom auto comment by harry
@@ -233,6 +207,6 @@ autocmd BufEnter *.* call CommonComment()
 autocmd BufEnter *.html,*.htm,*.xml call XmlComment()
 
 
-let g:ycm_path_to_python_interpreter = '/usr/bin/python'
-
 map <Leader>sv :source ~/.vimrc<CR>
+
+set colorcolumn=120
